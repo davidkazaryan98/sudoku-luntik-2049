@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Судоку - Лунный стиль</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="game-scene">
+    <aside class="character character-left" aria-hidden="true">
+      <div class="character-image character-image-left" role="img" aria-label="Вупсень"></div>
+      <p>Вупсень</p>
+    </aside>
+
+    <main class="app">
+    <header class="app-header">
+      <h1>Судоку</h1>
+      <p class="subtitle">Добрая головоломка в стиле <span class="l2049">Лунтик 2049</span></p>
+    </header>
+
+    <section class="controls" aria-label="Управление игрой">
+      <label class="difficulty-picker" for="difficulty-select">Сложность:</label>
+      <select id="difficulty-select" aria-label="Выбор сложности">
+        <option value="easy">Легкая</option>
+        <option value="medium" selected>Средняя</option>
+        <option value="hard">Сложная</option>
+      </select>
+      <button id="sound-toggle-btn" type="button" aria-pressed="true">Звук: вкл</button>
+      <button id="music-toggle-btn" type="button" aria-pressed="false">Музыка: выкл</button>
+      <div class="music-volume-control">
+        <label class="music-volume-wrap" for="music-volume-input">Громкость музыки</label>
+        <input
+          id="music-volume-input"
+          class="music-volume-input"
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value="35"
+          aria-label="Громкость фоновой музыки"
+        >
+      </div>
+      <button id="new-game-btn" type="button">Новая игра</button>
+      <button id="check-btn" type="button">Проверить</button>
+      <button id="reset-btn" type="button">Сбросить</button>
+    </section>
+
+    <section class="meta-panel" aria-label="Статистика игры">
+      <p><span>Таймер:</span> <strong id="timer-text">00:00</strong></p>
+      <p><span>Ошибки:</span> <strong id="errors-text">0</strong></p>
+    </section>
+
+    <section class="status-panel" aria-live="polite">
+      <p id="status-text">Выберите клетку и введите число от 1 до 9.</p>
+    </section>
+
+    <section class="board-wrapper" aria-label="Игровое поле">
+      <div id="sudoku-board" class="board" role="grid" aria-label="Поле Судоку 9 на 9"></div>
+    </section>
+
+    <section class="help">
+      <p>Подсказка: используйте клавиши 1-9, Backspace или Delete для очистки клетки.</p>
+    </section>
+    
+    <section class="rules" aria-label="Правила игры Судоку">
+      <h2>Правила Судоку</h2>
+      <p>Цель игры: заполнить все пустые клетки цифрами от 1 до 9.</p>
+      <ul>
+        <li>В каждой строке каждая цифра от 1 до 9 должна встречаться только один раз.</li>
+        <li>В каждом столбце каждая цифра от 1 до 9 должна встречаться только один раз.</li>
+        <li>В каждом квадрате 3x3 также не должно быть повторов цифр.</li>
+      </ul>
+      <p>Как играть: выберите клетку мышкой, вводите цифры клавишами 1-9, очищайте через Backspace/Delete.</p>
+    </section>
+    </main>
+
+    <aside class="character character-right" aria-hidden="true">
+      <div class="character-image character-image-right" role="img" aria-label="Пупсень"></div>
+      <p>Пупсень</p>
+    </aside>
+  </div>
+
+  <div id="jumpscare-overlay" class="jumpscare-overlay" hidden>
+    <img src="assets/images/horse-jumpscare.png" alt="Сюрприз после двух ошибок">
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
