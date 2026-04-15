@@ -118,7 +118,13 @@ function cloneBoard(board) {
 }
 
 function shouldUseMobileInput() {
-  return window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(max-width: 980px)").matches;
+  const ua = navigator.userAgent || "";
+  const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  return (
+    mobileUa ||
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(max-width: 980px)").matches
+  );
 }
 
 function isEditableCell(cell) {
@@ -500,11 +506,12 @@ function buildBoard() {
       cell.setAttribute("role", "gridcell");
       cell.setAttribute("aria-label", `Строка ${row + 1}, столбец ${col + 1}`);
       cell.tabIndex = 0;
-      cell.addEventListener("pointerdown", (event) => {
-        event.preventDefault();
+      const activateCell = () => {
         selectCell(cell);
         playClickSound("soft");
-      });
+      };
+      cell.addEventListener("click", activateCell);
+      cell.addEventListener("touchstart", activateCell, { passive: true });
       boardElement.appendChild(cell);
     }
   }
