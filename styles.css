@@ -418,6 +418,40 @@ button:active {
   color: var(--text-muted);
 }
 
+.mobile-numpad {
+  margin: 12px auto 0;
+  width: min(100%, 420px);
+  border: 1px solid #3e5ea6;
+  border-radius: 12px;
+  background: rgba(19, 28, 66, 0.9);
+  padding: 10px;
+}
+
+.mobile-numpad p {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: #cfe4ff;
+  text-align: center;
+}
+
+.mobile-numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobile-numpad-grid button {
+  min-height: 42px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.mobile-numpad-grid .mobile-clear-btn {
+  grid-column: span 2;
+  background: linear-gradient(145deg, #5b4f8e, #434a8c);
+}
+
 @keyframes statusPulse {
   0%,
   100% {
@@ -464,6 +498,82 @@ button:active {
   }
 }
 
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .controls .difficulty-picker {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .controls select,
+  .controls button {
+    width: 100%;
+  }
+
+  .music-volume-control {
+    grid-column: 1 / -1;
+    align-items: stretch;
+  }
+
+  .music-volume-input {
+    width: 100%;
+  }
+
+  .meta-panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .board {
+    width: min(92vw, 420px);
+    aspect-ratio: 1 / 1;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    grid-template-rows: repeat(9, minmax(0, 1fr));
+  }
+
+  .cell {
+    font-size: clamp(0.92rem, 3.9vw, 1.15rem);
+  }
+
+  .rules {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .jumpscare-overlay img {
+    width: min(92vw, 360px);
+    height: min(72vh, 480px);
+  }
+
+  .mobile-numpad-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mobile-numpad-grid .mobile-clear-btn {
+    grid-column: span 3;
+  }
+}
+
 @media (max-width: 980px) {
   .game-scene {
     grid-template-columns: 1fr;
@@ -471,6 +581,12 @@ button:active {
 
   .character {
     display: none;
+  }
+}
+
+@media (min-width: 981px) {
+  .mobile-numpad {
+    display: none !important;
   }
 }
 

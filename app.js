@@ -85,6 +85,9 @@ const newGameBtn = document.getElementById("new-game-btn");
 const checkBtn = document.getElementById("check-btn");
 const resetBtn = document.getElementById("reset-btn");
 const jumpscareOverlay = document.getElementById("jumpscare-overlay");
+const mobileNumpad = document.getElementById("mobile-numpad");
+const mobileNumpadValueButtons = document.querySelectorAll("[data-mobile-value]");
+const mobileNumpadClearBtn = document.querySelector("[data-mobile-action='clear']");
 
 let originalBoard = [];
 let currentBoard = [];
@@ -112,6 +115,45 @@ let consecutiveErrors = 0;
 
 function cloneBoard(board) {
   return board.map((row) => row.slice());
+}
+
+function shouldUseMobileInput() {
+  return window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(max-width: 980px)").matches;
+}
+
+function isEditableCell(cell) {
+  if (!cell) {
+    return false;
+  }
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+  return originalBoard[row][col] === 0;
+}
+
+function isEmptyEditableCell(cell) {
+  if (!isEditableCell(cell)) {
+    return false;
+  }
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+  return currentBoard[row][col] === 0;
+}
+
+function hideMobileNumpad() {
+  mobileNumpad.hidden = true;
+}
+
+function showMobileNumpadForSelectedCell() {
+  if (
+    !shouldUseMobileInput() ||
+    !selectedCell ||
+    !isEmptyEditableCell(selectedCell) ||
+    isGameCompleted
+  ) {
+    hideMobileNumpad();
+    return;
+  }
+  mobileNumpad.hidden = false;
 }
 
 function syncSoundToggleView() {
@@ -458,9 +500,10 @@ function buildBoard() {
       cell.setAttribute("role", "gridcell");
       cell.setAttribute("aria-label", `Строка ${row + 1}, столбец ${col + 1}`);
       cell.tabIndex = 0;
-      cell.addEventListener("click", () => {
-        playClickSound("soft");
+      cell.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
         selectCell(cell);
+        playClickSound("soft");
       });
       boardElement.appendChild(cell);
     }
@@ -473,6 +516,7 @@ function selectCell(cell) {
   }
   selectedCell = cell;
   selectedCell.classList.add("selected");
+  showMobileNumpadForSelectedCell();
 }
 
 function renderBoard() {
@@ -641,6 +685,7 @@ function applyInput(value) {
 function resetToOriginal() {
   currentBoard = cloneBoard(originalBoard);
   selectedCell = null;
+  hideMobileNumpad();
   isGameCompleted = false;
   resetStats();
   startTimer();
@@ -653,6 +698,7 @@ function startNewGame() {
   originalBoard = getRandomPuzzle(currentDifficulty);
   currentBoard = cloneBoard(originalBoard);
   selectedCell = null;
+  hideMobileNumpad();
   isGameCompleted = false;
   resetStats();
   startTimer();
@@ -680,9 +726,34 @@ function onKeyDown(event) {
   }
 }
 
+function onMobileNumpadValueClick(event) {
+  if (!selectedCell || !isEditableCell(selectedCell) || isGameCompleted) {
+    return;
+  }
+  const rawValue = event.currentTarget.dataset.mobileValue;
+  const value = Number(rawValue);
+  if (!Number.isFinite(value) || value < 1 || value > 9) {
+    return;
+  }
+  playClickSound("soft");
+  applyInput(value);
+}
+
+function onMobileNumpadClearClick() {
+  if (!selectedCell || !isEditableCell(selectedCell) || isGameCompleted) {
+    return;
+  }
+  playClickSound("soft");
+  applyInput(0);
+}
+
 soundToggleBtn.addEventListener("click", toggleSound);
 musicToggleBtn.addEventListener("click", toggleMusic);
 musicVolumeInput.addEventListener("input", onMusicVolumeInput);
+mobileNumpadValueButtons.forEach((button) => {
+  button.addEventListener("click", onMobileNumpadValueClick);
+});
+mobileNumpadClearBtn.addEventListener("click", onMobileNumpadClearClick);
 newGameBtn.addEventListener("click", () => {
   playClickSound("ui");
   startNewGame();
